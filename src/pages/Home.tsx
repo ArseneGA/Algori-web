@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-gray-50 to-gray-100 mt-0">
+    <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-gray-50 to-gray-100 mt-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mt-4 md:mt-8 lg:mt-12">
           <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
