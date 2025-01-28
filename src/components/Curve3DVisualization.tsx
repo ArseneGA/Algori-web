@@ -14,12 +14,6 @@ interface Curve3DVisualizationProps {
   ref?: React.RefObject<{ captureImage: () => string }>;
 }
 
-// Ajouter à l'interface des refs
-interface Curve3DVisualizationRef {
-  captureImage: () => string;
-  getCamera: () => THREE.Camera;
-}
-
 /**
  * @desc Affiche la courbe 3D et centre automatiquement la caméra sur la totalité des points.
  */
@@ -33,6 +27,7 @@ const Scene = forwardRef<{ captureImage: () => string }, {
   const { camera, gl, scene } = useThree();
   const controlsRef = useRef<any>();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // 768px est le breakpoint md de Tailwind
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -69,37 +64,36 @@ const Scene = forwardRef<{ captureImage: () => string }, {
 
   // Ajustement de la caméra et du contrôleur pour centrer la courbe
   useEffect(() => {
-    if (!points.length) return;
-    if (!controlsRef.current) return;
+    if (!points.length || !controlsRef.current) return;
 
-    // Calcul de la bounding box
     const boundingBox = new THREE.Box3().setFromPoints(points);
     const center = boundingBox.getCenter(new THREE.Vector3());
     const size = boundingBox.getSize(new THREE.Vector3());
     const maxDimension = Math.max(size.x, size.y, size.z);
 
-    // Placer la cible des contrôles au centre
-    controlsRef.current.target.copy(center);
+    // Ne configurer la position initiale qu'une seule fois
+    if (!isInitialized) {
+      // Placer la cible des contrôles au centre
+      controlsRef.current.target.copy(center);
 
-    // Ajuster la distance de la caméra selon le device
-    const fitDistance = isMobile ? maxDimension * 2 : maxDimension * 1.5;
-    camera.position.set(
-      center.x + fitDistance,
-      center.y + fitDistance,
-      center.z + fitDistance
-    );
+      // Position initiale de la caméra
+      const distance = isMobile ? maxDimension * 2 : maxDimension * 1.5;
+      camera.position.set(
+        center.x + distance,
+        center.y + distance,
+        center.z + distance
+      );
 
-    // Limites de zoom adaptées
-    controlsRef.current.minDistance = maxDimension * 0.8; // Plus restrictif
-    controlsRef.current.maxDistance = maxDimension * 2.5; // Moins de zoom out possible
+      camera.updateProjectionMatrix();
+      controlsRef.current.update();
+      setIsInitialized(true);
+    }
 
-    // Limites de rotation pour garder la courbe visible
-    controlsRef.current.minPolarAngle = Math.PI / 4; // 45 degrés minimum
-    controlsRef.current.maxPolarAngle = Math.PI * 3/4; // 135 degrés maximum
+    // Toujours mettre à jour les limites de zoom
+    controlsRef.current.minDistance = maxDimension * 0.5;
+    controlsRef.current.maxDistance = maxDimension * 5;
 
-    camera.updateProjectionMatrix();
-    controlsRef.current.update();
-  }, [params, camera, points, isMobile]);
+  }, [params, camera, points, isMobile, isInitialized]);
 
   // Si l'utilisateur change l'angle de caméra, on peut transmettre la matrice
   const handleCameraChange = () => {
@@ -134,7 +128,7 @@ const Scene = forwardRef<{ captureImage: () => string }, {
     }
   }, [points, onPointsUpdate]);
 
-  // Exposer la fonction de capture via un ref
+  // Exposer la fonction via useImperativeHandle
   useImperativeHandle(ref, () => ({
     captureImage: () => {
       gl.render(scene, camera);
@@ -142,6 +136,11 @@ const Scene = forwardRef<{ captureImage: () => string }, {
     },
     getCamera: () => camera
   }), [gl, scene, camera]);
+
+  // Réinitialiser isInitialized quand le type de courbe change
+  useEffect(() => {
+    setIsInitialized(false);
+  }, [params.curveType]); // Ajouter curveType aux props si nécessaire
 
   return (
     <>
@@ -158,9 +157,13 @@ const Scene = forwardRef<{ captureImage: () => string }, {
         enableRotate
         onChange={handleCameraChange}
         makeDefault
-        dampingFactor={0.05}
-        rotateSpeed={0.5}
+        rotateSpeed={1.0}
         zoomSpeed={0.5}
+        enableDamping={false}
+        minPolarAngle={-Math.PI}
+        maxPolarAngle={Math.PI}
+        minAzimuthAngle={-Math.PI}
+        maxAzimuthAngle={Math.PI}
       />
 
       {!isMobile && (

@@ -128,15 +128,18 @@ const Lissajous3DTab: React.FC<{ curveType: CurveType }> = () => {
                   onChange={(e) => handleParamChange(key as keyof Curve3DParams, parseFloat(e.target.value))}
                   className="w-full"
                 />
-                <input
-                  type="number"
-                  value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
-                  onChange={(e) => handleParamChange(key as keyof Curve3DParams, parseFloat(e.target.value))}
-                  step={getParameterStep(key)}
-                  min={getParameterMin(key)}
-                  max={getParameterMax(key)}
-                  className="w-24 px-2 py-1 border rounded-md text-sm"
-                />
+                <div className="flex items-center w-24">
+                  <input
+                    type="number"
+                    value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
+                    onChange={(e) => handleParamChange(key as keyof Curve3DParams, parseFloat(e.target.value))}
+                    step={getParameterStep(key)}
+                    min={getParameterMin(key)}
+                    max={getParameterMax(key)}
+                    className="w-20 px-2 py-1 border rounded-md text-sm"
+                  />
+                  {key === 'longueur' && <span className="ml-1">π</span>}
+                </div>
               </div>
             </div>
           ))}

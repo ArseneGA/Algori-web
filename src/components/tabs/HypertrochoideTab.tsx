@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { CurveType, HypertrochoideParams } from '../../types/curves';
 import CurveVisualization from '../CurveVisualization';
-import { saveSvg } from '../../utils/export';
+import { saveSvg, saveSvg2D } from '../../utils/export';
 import { ArrowDown, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -38,16 +38,11 @@ const HypertrochoideTab: React.FC<{ curveType: CurveType }> = () => {
   };
 
   const handleExportSVG = () => {
-    const canvas = document.querySelector('.visualization-container canvas');
-    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-      console.error('Canvas non trouvé');
-      return;
-    }
-
+    const points = generatePoints();
     const fileName = `Hypertrochoide_R${params.R}_r${params.r}_d${params.d}_tours${params.tours}_pts${params.points}.svg`
       .replace(/\./g, 'p');
-
-    saveSvg(canvas, fileName);
+    
+    saveSvg2D(points, fileName);
   };
 
   const getParameterLabel = (key: string): string => {

@@ -92,18 +92,18 @@ const Lissajous2DTab: React.FC<{ curveType: CurveType }> = () => {
                   )}
                   className="w-full"
                 />
-                <input
-                  type="number"
-                  value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
-                  onChange={(e) => handleParamChange(
-                    key as keyof Curve2DParams,
-                    key === 'longueur'
-                      ? parseFloat(e.target.value) * Math.PI
-                      : parseFloat(e.target.value)
-                  )}
-                  step={key === 'points' ? 100 : 0.1}
-                  className="w-24 px-2 py-1 border rounded-md text-sm"
-                />
+                <div className="flex items-center w-24">
+                  <input
+                    type="number"
+                    value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
+                    onChange={(e) => handleParamChange(key as keyof Curve2DParams, parseFloat(e.target.value))}
+                    step={key === 'points' ? 100 : 0.1}
+                    min={key === 'longueur' ? 0.1 : 0}
+                    max={key === 'longueur' ? 4 : key === 'points' ? 10000 : 10}
+                    className="w-20 px-2 py-1 border rounded-md text-sm"
+                  />
+                  {key === 'longueur' && <span className="ml-1">π</span>}
+                </div>
               </div>
             </div>
           ))}

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { CurveType, ExponentialParams } from '../../types/curves';
 import CurveVisualization from '../CurveVisualization';
-import { saveSvg } from '../../utils/export';
+import { saveSvg, saveSvg2D } from '../../utils/export';
 import { ArrowDown, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -67,16 +67,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
   };
 
   const handleExportSVG = () => {
-    const canvas = document.querySelector('.visualization-container canvas');
-    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-      console.error('Canvas non trouvé');
-      return;
-    }
-
+    const points = generatePoints();
     const fileName = `Exponential_n${params.n}_theta${(params.theta_max/Math.PI).toFixed(1)}pi_pts${params.points}.svg`
       .replace(/\./g, 'p');
-
-    saveSvg(canvas, fileName);
+    
+    saveSvg2D(points, fileName);
   };
 
   const getParameterMin = (key: string): number => {
@@ -242,15 +237,18 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 onChange={(e) => handleParamChange('theta_max', parseFloat(e.target.value) * Math.PI)}
                 className="w-full"
               />
-              <input
-                type="number"
-                value={(params.theta_max / Math.PI).toFixed(1)}
-                onChange={(e) => handleParamChange('theta_max', parseFloat(e.target.value) * Math.PI)}
-                step={getParameterStep('theta_max') / Math.PI}
-                min={getParameterMin('theta_max') / Math.PI}
-                max={getParameterMax('theta_max') / Math.PI}
-                className="w-24 px-2 py-1 border rounded-md text-sm"
-              />
+              <div className="flex items-center w-24">
+                <input
+                  type="number"
+                  value={(params.theta_max / Math.PI).toFixed(1)}
+                  onChange={(e) => handleParamChange('theta_max', parseFloat(e.target.value) * Math.PI)}
+                  step={getParameterStep('theta_max') / Math.PI}
+                  min={getParameterMin('theta_max') / Math.PI}
+                  max={getParameterMax('theta_max') / Math.PI}
+                  className="w-20 px-2 py-1 border rounded-md text-sm"
+                />
+                {params.theta_max && <span className="ml-1">π</span>}
+              </div>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { CurveType, Clelie3DParams } from '../../types/curves';
 import Curve3DVisualization from '../Curve3DVisualization';
-import { saveSvg, savePly } from '../../utils/export';
+import { saveSvg, savePly, saveSvg3D } from '../../utils/export';
 import { ArrowDown, ArrowLeft } from 'lucide-react';
 import * as THREE from 'three';
 import { Link } from 'react-router-dom';
@@ -15,7 +15,10 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
   });
 
   const [points, setPoints] = useState<THREE.Vector3[]>([]);
-  const visualizationRef = useRef<{ captureImage: () => string }>(null);
+  const visualizationRef = useRef<{ 
+    captureImage: () => string;
+    getCamera: () => THREE.Camera;
+  }>(null);
 
   // Fonction corrigée pour générer les points de la courbe de Clélie
   const generatePoints = useCallback(() => {
@@ -25,7 +28,7 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
     for (let i = 0; i <= numPoints; i++) {
       const theta = (i / numPoints) * longueur;
       
-      // Équations paramétriques corrigées de la courbe de Clélie
+      // Équations paramétriques de la courbe de Clélie (sans déphasage)
       const x = a * Math.cos(m * theta) * Math.sin(theta);
       const y = a * Math.sin(m * theta) * Math.sin(theta);
       const z = a * Math.cos(theta);
@@ -43,56 +46,22 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
     }));
   };
 
-  const handleExportSVG = async () => {
-    if (!visualizationRef.current) {
-      console.error('Visualisation non trouvée');
+  const handleExportSVG = () => {
+    const points = generatePoints();
+    const camera = visualizationRef.current?.getCamera();
+    
+    if (!camera) {
+      console.error('Camera not found');
       return;
     }
 
-    try {
-      // Attendre le prochain frame pour s'assurer que la scène est rendue
-      await new Promise(resolve => requestAnimationFrame(resolve));
-
-      // Capturer l'image
-      const imageData = visualizationRef.current.captureImage();
+    const viewMatrix = camera.matrixWorldInverse;
+    const projectionMatrix = camera.projectionMatrix;
+    
+    const fileName = `Clelie3D_a${params.a}_m${params.m}_L${(params.longueur/Math.PI).toFixed(1)}pi_pts${params.points}.svg`
+      .replace(/\./g, 'p');
       
-      const fileName = `Clelie3D_a${params.a}_m${params.m}_L${(params.longueur/Math.PI).toFixed(1)}pi_pts${params.points}.svg`
-        .replace(/\./g, 'p');
-
-      const svgContent = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">
-          <image width="100%" height="100%" href="${imageData}"/>
-        </svg>`;
-
-      const blob = new Blob([svgContent], { type: 'image/svg+xml' });
-      
-      if ('showSaveFilePicker' in window) {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: fileName,
-          types: [{
-            description: 'Fichier SVG',
-            accept: {
-              'image/svg+xml': ['.svg'],
-            },
-          }],
-        });
-        
-        const writable = await handle.createWritable();
-        await writable.write(blob);
-        await writable.close();
-      } else {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error('Erreur lors de l\'export:', error);
-    }
+    saveSvg3D(points, viewMatrix, projectionMatrix, fileName);
   };
 
   const handleExportPLY = () => {
@@ -161,15 +130,18 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
                   onChange={(e) => handleParamChange(key as keyof Clelie3DParams, parseFloat(e.target.value))}
                   className="w-full"
                 />
-                <input
-                  type="number"
-                  value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
-                  onChange={(e) => handleParamChange(key as keyof Clelie3DParams, parseFloat(e.target.value))}
-                  step={getParameterStep(key)}
-                  min={getParameterMin(key)}
-                  max={getParameterMax(key)}
-                  className="w-24 px-2 py-1 border rounded-md text-sm"
-                />
+                <div className="flex items-center w-24">
+                  <input
+                    type="number"
+                    value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
+                    onChange={(e) => handleParamChange(key as keyof Clelie3DParams, parseFloat(e.target.value))}
+                    step={getParameterStep(key)}
+                    min={getParameterMin(key)}
+                    max={getParameterMax(key)}
+                    className="w-20 px-2 py-1 border rounded-md text-sm"
+                  />
+                  {key === 'longueur' && <span className="ml-1">π</span>}
+                </div>
               </div>
             </div>
           ))}
