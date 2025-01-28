@@ -100,4 +100,117 @@ export const savePly = (points: THREE.Vector3[], fileName: string) => {
   } else {
     downloadFallback(content, fileName);
   }
-}; 
+};
+
+// Fonction pour exporter les courbes 2D en véritable SVG
+export const saveSvg2D = async (points: [number, number][], fileName: string, width = 800, height = 800) => {
+  // Trouver les limites des points pour la mise à l'échelle
+  const xValues = points.map(p => p[0]);
+  const yValues = points.map(p => p[1]);
+  const minX = Math.min(...xValues);
+  const maxX = Math.max(...xValues);
+  const minY = Math.min(...yValues);
+  const maxY = Math.max(...yValues);
+
+  // Calculer les facteurs d'échelle avec une marge
+  const margin = 50;
+  const scaleX = (width - 2 * margin) / (maxX - minX);
+  const scaleY = (height - 2 * margin) / (maxY - minY);
+  const scale = Math.min(scaleX, scaleY);
+
+  // Transformer les points en coordonnées SVG
+  const transformedPoints = points.map(([x, y]) => [
+    (x - minX) * scale + margin,
+    height - ((y - minY) * scale + margin) // Inverser Y car SVG a l'origine en haut
+  ]);
+
+  // Créer le chemin SVG
+  const pathData = transformedPoints.reduce((path, point, i) => {
+    const command = i === 0 ? 'M' : 'L';
+    return `${path} ${command} ${point[0]},${point[1]}`;
+  }, '');
+
+  // Créer le contenu SVG
+  const svgContent = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+  <path
+    d="${pathData}"
+    fill="none"
+    stroke="#4f46e5"
+    stroke-width="2"
+  />
+</svg>`;
+
+  await saveFile(svgContent, fileName, 'image/svg+xml');
+};
+
+// Fonction pour exporter les courbes 3D en SVG avec projection
+export const saveSvg3D = async (
+  points: THREE.Vector3[], 
+  viewMatrix: THREE.Matrix4,
+  projectionMatrix: THREE.Matrix4,
+  fileName: string,
+  width = 800,
+  height = 800
+) => {
+  // Créer la matrice de projection complète
+  const projViewMatrix = new THREE.Matrix4().multiplyMatrices(projectionMatrix, viewMatrix);
+  
+  // Projeter les points 3D en 2D
+  const projectedPoints = points.map(point => {
+    const projected = point.clone().applyMatrix4(projViewMatrix);
+    // Convertir en coordonnées NDC (-1 à 1)
+    return [
+      ((projected.x + 1) * width) / 2,
+      ((1 - projected.y) * height) / 2
+    ];
+  });
+
+  // Créer le chemin SVG
+  const pathData = projectedPoints.reduce((path, point, i) => {
+    const command = i === 0 ? 'M' : 'L';
+    return `${path} ${command} ${point[0]},${point[1]}`;
+  }, '');
+
+  // Créer le contenu SVG avec les axes
+  const svgContent = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+  <path
+    d="${pathData}"
+    fill="none"
+    stroke="#4f46e5"
+    stroke-width="2"
+  />
+</svg>`;
+
+  await saveFile(svgContent, fileName, 'image/svg+xml');
+};
+
+// Fonction utilitaire pour sauvegarder le fichier
+async function saveFile(content: string, fileName: string, type: string) {
+  const blob = new Blob([content], { type });
+
+  if ('showSaveFilePicker' in window) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName,
+        types: [{
+          description: 'Fichier SVG',
+          accept: {
+            'image/svg+xml': ['.svg'],
+          },
+        }],
+      });
+      
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        downloadFallback(content, fileName);
+      }
+    }
+  } else {
+    downloadFallback(content, fileName);
+  }
+} 

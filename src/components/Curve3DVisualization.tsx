@@ -14,6 +14,12 @@ interface Curve3DVisualizationProps {
   ref?: React.RefObject<{ captureImage: () => string }>;
 }
 
+// Ajouter à l'interface des refs
+interface Curve3DVisualizationRef {
+  captureImage: () => string;
+  getCamera: () => THREE.Camera;
+}
+
 /**
  * @desc Affiche la courbe 3D et centre automatiquement la caméra sur la totalité des points.
  */
@@ -133,7 +139,8 @@ const Scene = forwardRef<{ captureImage: () => string }, {
     captureImage: () => {
       gl.render(scene, camera);
       return gl.domElement.toDataURL('image/png', 1.0);
-    }
+    },
+    getCamera: () => camera
   }), [gl, scene, camera]);
 
   return (
