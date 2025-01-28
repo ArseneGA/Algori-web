@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowDown } from 'lucide-react';
 import { CurveType, Curve2DParams } from '../../types/curves';
 import CurveVisualization from '../CurveVisualization';
-import { saveSvg } from '../../utils/export';
+import { saveSvg2D } from '../../utils/export';
 
 const Lissajous2DTab: React.FC<{ curveType: CurveType }> = () => {
   const [params, setParams] = useState<Curve2DParams>({
@@ -38,16 +38,11 @@ const Lissajous2DTab: React.FC<{ curveType: CurveType }> = () => {
   };
 
   const handleExportSVG = () => {
-    const canvas = document.querySelector('.visualization-container canvas');
-    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-      console.error('Canvas non trouvé');
-      return;
-    }
-
+    const points = generatePoints();
     const fileName = `Lissajous2D_A${params.A}_B${params.B}_p${params.p}_q${params.q}_delta${params.delta}_L${(params.longueur/Math.PI).toFixed(1)}pi_pts${params.points}.svg`
       .replace(/\./g, 'p');
-
-    saveSvg(canvas, fileName);
+    
+    saveSvg2D(points, fileName);
   };
 
   return (
