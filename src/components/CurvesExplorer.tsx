@@ -280,4 +280,8 @@ const CurvesExplorer: React.FC = () => {
   );
 };
 
+<<<<<<< HEAD
 export default CurvesExplorer;
+=======
+export default CurvesExplorer; 
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b

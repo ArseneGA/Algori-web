@@ -108,24 +108,40 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="p-2 sm:p-6 space-y-4 sm:space-y-6 bg-gray-0 dark:bg-dark">
+=======
+    <div className="p-2 sm:p-6 space-y-4 sm:space-y-6">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
         <div className="space-y-4">
           <div className="flex items-center">
             <Link 
               to="/curves" 
+<<<<<<< HEAD
               className="inline-flex items-center text-indigo-600 hover:text-indigo-700 dark:text-white dark:hover:text-gray-300 transition-colors"
+=======
+              className="inline-flex items-center text-indigo-600 hover:text-indigo-700 transition-colors"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour aux courbes
             </Link>
           </div>
+<<<<<<< HEAD
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Courbe Exponentielle</h2>
+=======
+          <h2 className="text-2xl font-bold text-gray-900">Courbe Exponentielle</h2>
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
         </div>
 
         <button
           onClick={handleExportSVG}
+<<<<<<< HEAD
           className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+=======
+          className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors inline-flex items-center justify-center space-x-2"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
         >
           <span>Exporter en SVG</span>
           <ArrowDown size={16} />
@@ -133,10 +149,17 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+<<<<<<< HEAD
         <div className="order-2 lg:order-1 space-y-4 bg-white dark:bg-dark-secondary p-4 rounded-lg shadow-sm">
           {/* Nombre de termes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
+=======
+        <div className="order-2 lg:order-1 space-y-4 bg-white p-4 rounded-lg shadow-sm">
+          {/* Nombre de termes */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               Nombre de termes (n)
             </label>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
@@ -147,7 +170,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 step={getParameterStep('n')}
                 value={params.n}
                 onChange={(e) => handleParamChange('n', parseInt(e.target.value))}
+<<<<<<< HEAD
                 className="w-full dark:bg-dark"
+=======
+                className="w-full"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               />
               <input
                 type="number"
@@ -156,19 +183,32 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 min={getParameterMin('n')}
                 max={getParameterMax('n')}
                 step={getParameterStep('n')}
+<<<<<<< HEAD
                 className="w-24 px-2 py-1 border rounded-md text-sm dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+=======
+                className="w-24 px-2 py-1 border rounded-md text-sm"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               />
             </div>
           </div>
 
           {/* Paramètres pour chaque terme */}
           {Array.from({ length: params.n }).map((_, i) => (
+<<<<<<< HEAD
             <div key={i} className="space-y-4 border-t dark:border-gray-700 pt-4">
               <h3 className="font-medium text-gray-900 dark:text-white">Terme {i + 1}</h3>
               
               {/* Longueur ai */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-white">
+=======
+            <div key={i} className="space-y-4 border-t pt-4">
+              <h3 className="font-medium">Terme {i + 1}</h3>
+              
+              {/* Longueur ai */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                   Longueur a{i + 1}
                 </label>
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
@@ -179,7 +219,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                     step={getParameterStep('a')}
                     value={params.a[i]}
                     onChange={(e) => handleParamChange('a', parseFloat(e.target.value), i)}
+<<<<<<< HEAD
                     className="w-full dark:bg-dark"
+=======
+                    className="w-full"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                   />
                   <input
                     type="number"
@@ -188,14 +232,22 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                     step={getParameterStep('a')}
                     min={getParameterMin('a')}
                     max={getParameterMax('a')}
+<<<<<<< HEAD
                     className="w-24 px-2 py-1 border rounded-md text-sm dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+=======
+                    className="w-24 px-2 py-1 border rounded-md text-sm"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                   />
                 </div>
               </div>
 
               {/* Vitesse bi */}
               <div>
+<<<<<<< HEAD
                 <label className="block text-sm font-medium text-gray-700 dark:text-white">
+=======
+                <label className="block text-sm font-medium text-gray-700">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                   Vitesse b{i + 1}
                 </label>
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
@@ -206,7 +258,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                     step={getParameterStep('b')}
                     value={params.b[i]}
                     onChange={(e) => handleParamChange('b', parseInt(e.target.value), i)}
+<<<<<<< HEAD
                     className="w-full dark:bg-dark"
+=======
+                    className="w-full"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                   />
                   <input
                     type="number"
@@ -215,7 +271,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                     step={getParameterStep('b')}
                     min={getParameterMin('b')}
                     max={getParameterMax('b')}
+<<<<<<< HEAD
                     className="w-24 px-2 py-1 border rounded-md text-sm dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+=======
+                    className="w-24 px-2 py-1 border rounded-md text-sm"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                   />
                 </div>
               </div>
@@ -224,7 +284,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
 
           {/* Angle maximum */}
           <div>
+<<<<<<< HEAD
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
+=======
+            <label className="block text-sm font-medium text-gray-700">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               Angle maximum (θ × π)
             </label>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
@@ -235,7 +299,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 step={getParameterStep('theta_max') / Math.PI}
                 value={params.theta_max / Math.PI}
                 onChange={(e) => handleParamChange('theta_max', parseFloat(e.target.value) * Math.PI)}
+<<<<<<< HEAD
                 className="w-full dark:bg-dark"
+=======
+                className="w-full"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               />
               <div className="flex items-center w-24">
                 <input
@@ -245,16 +313,26 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                   step={getParameterStep('theta_max') / Math.PI}
                   min={getParameterMin('theta_max') / Math.PI}
                   max={getParameterMax('theta_max') / Math.PI}
+<<<<<<< HEAD
                   className="w-20 px-2 py-1 border rounded-md text-sm dark:bg-dark-secondary dark:text-white dark:border-gray-700"
                 />
                 <span className="ml-1 dark:text-white">π</span>
+=======
+                  className="w-20 px-2 py-1 border rounded-md text-sm"
+                />
+                {params.theta_max && <span className="ml-1">π</span>}
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               </div>
             </div>
           </div>
 
           {/* Nombre de points */}
           <div>
+<<<<<<< HEAD
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
+=======
+            <label className="block text-sm font-medium text-gray-700">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               Nombre de points
             </label>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
@@ -265,7 +343,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 step={getParameterStep('points')}
                 value={params.points}
                 onChange={(e) => handleParamChange('points', parseInt(e.target.value))}
+<<<<<<< HEAD
                 className="w-full dark:bg-dark"
+=======
+                className="w-full"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               />
               <input
                 type="number"
@@ -274,14 +356,22 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 step={getParameterStep('points')}
                 min={getParameterMin('points')}
                 max={getParameterMax('points')}
+<<<<<<< HEAD
                 className="w-24 px-2 py-1 border rounded-md text-sm dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+=======
+                className="w-24 px-2 py-1 border rounded-md text-sm"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
               />
             </div>
           </div>
         </div>
 
         <div className="order-1 lg:order-2">
+<<<<<<< HEAD
           <div className="aspect-square w-full max-w-[500px] mx-auto bg-white dark:bg-dark-secondary rounded-lg shadow-lg visualization-container">
+=======
+          <div className="aspect-square w-full max-w-[500px] mx-auto bg-white rounded-lg shadow-lg visualization-container">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
             <CurveVisualization 
               points={generatePoints()}
               style={{ width: '100%', height: '100%' }}

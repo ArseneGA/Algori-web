@@ -90,24 +90,40 @@ const HypertrochoideTab: React.FC<{ curveType: CurveType }> = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="p-2 sm:p-6 space-y-4 sm:space-y-6 bg-gray-0 dark:bg-dark">
+=======
+    <div className="p-2 sm:p-6 space-y-4 sm:space-y-6">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
         <div className="space-y-4">
           <div className="flex items-center">
             <Link 
               to="/curves" 
+<<<<<<< HEAD
               className="inline-flex items-center text-indigo-600 hover:text-indigo-700 dark:text-white dark:hover:text-gray-300 transition-colors"
+=======
+              className="inline-flex items-center text-indigo-600 hover:text-indigo-700 transition-colors"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour aux courbes
             </Link>
           </div>
+<<<<<<< HEAD
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Hypertrochoïde</h2>
+=======
+          <h2 className="text-2xl font-bold text-gray-900">Hypertrochoïde</h2>
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
         </div>
 
         <button
           onClick={handleExportSVG}
+<<<<<<< HEAD
           className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+=======
+          className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors inline-flex items-center justify-center space-x-2"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
         >
           <span>Exporter en SVG</span>
           <ArrowDown size={16} />
@@ -115,10 +131,17 @@ const HypertrochoideTab: React.FC<{ curveType: CurveType }> = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+<<<<<<< HEAD
         <div className="order-2 lg:order-1 space-y-4 bg-white dark:bg-dark-secondary p-4 rounded-lg shadow-sm">
           {Object.entries(params).map(([key, value]) => (
             <div key={key}>
               <label className="block text-sm font-medium text-gray-700 dark:text-white">
+=======
+        <div className="order-2 lg:order-1 space-y-4 bg-white p-4 rounded-lg shadow-sm">
+          {Object.entries(params).map(([key, value]) => (
+            <div key={key}>
+              <label className="block text-sm font-medium text-gray-700">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                 {getParameterLabel(key)}
               </label>
               <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
@@ -129,7 +152,11 @@ const HypertrochoideTab: React.FC<{ curveType: CurveType }> = () => {
                   step={getParameterStep(key)}
                   value={value}
                   onChange={(e) => handleParamChange(key as keyof HypertrochoideParams, parseFloat(e.target.value))}
+<<<<<<< HEAD
                   className="w-full dark:bg-dark"
+=======
+                  className="w-full"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                 />
                 <input
                   type="number"
@@ -138,7 +165,11 @@ const HypertrochoideTab: React.FC<{ curveType: CurveType }> = () => {
                   step={getParameterStep(key)}
                   min={getParameterMin(key)}
                   max={getParameterMax(key)}
+<<<<<<< HEAD
                   className="w-24 px-2 py-1 border rounded-md text-sm dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+=======
+                  className="w-24 px-2 py-1 border rounded-md text-sm"
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
                 />
               </div>
             </div>
@@ -146,7 +177,11 @@ const HypertrochoideTab: React.FC<{ curveType: CurveType }> = () => {
         </div>
 
         <div className="order-1 lg:order-2">
+<<<<<<< HEAD
           <div className="aspect-square w-full max-w-[500px] mx-auto bg-white dark:bg-dark-secondary rounded-lg shadow-lg visualization-container">
+=======
+          <div className="aspect-square w-full max-w-[500px] mx-auto bg-white rounded-lg shadow-lg visualization-container">
+>>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
             <CurveVisualization 
               points={generatePoints()}
               style={{ width: '100%', height: '100%' }}
