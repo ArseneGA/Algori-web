@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react'],
-<<<<<<< HEAD
     include: ['katex']
   },
   build: {
@@ -14,7 +13,4 @@ export default defineConfig({
       include: [/katex/]
     }
   }
-=======
-  },
->>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
 });

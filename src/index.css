@@ -13,7 +13,6 @@ body {
 
 #root {
   min-height: 100vh;
-<<<<<<< HEAD
 }
 
 /* Styles pour la transition du thème */
@@ -67,6 +66,4 @@ body {
 
 .dark .parameter-value {
   @apply text-gray-300;
-=======
->>>>>>> 2dd10b48221f417dfca36b5cc0431124bc84675b
 }
