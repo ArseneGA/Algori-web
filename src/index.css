@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Styles pour la transition du thème */
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Styles spécifiques au mode sombre */
+.dark {
+  color-scheme: dark;
+}
+
+/* Utilisation des classes Tailwind directement */
+.dark .visualization-container {
+  @apply bg-dark-secondary border-gray-700;
+}
+
+.dark .card {
+  @apply bg-dark-secondary border-gray-700;
+}
+
+.dark input[type="range"] {
+  @apply bg-dark;
+}
+
+.dark input[type="range"]::-webkit-slider-thumb {
+  @apply bg-white;
+}
+
+.dark input[type="range"]::-moz-range-thumb {
+  @apply bg-white;
+}
+
+.dark input[type="number"] {
+  @apply bg-dark-secondary text-white border-gray-700;
+}
+
+.dark button:not([aria-label="Toggle theme"]) {
+  @apply bg-indigo-600 text-white hover:bg-indigo-700;
+}
+
+/* Styles pour les conteneurs en mode sombre */
+.dark .parameter-container {
+  @apply bg-dark-secondary border-gray-700;
+}
+
+/* Styles pour les labels en mode sombre */
+.dark .parameter-label {
+  @apply text-white;
+}
+
+.dark .parameter-value {
+  @apply text-gray-300;
+}
