@@ -18,7 +18,7 @@ const InfoButton: React.FC<InfoButtonProps> = ({ title, content }) => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+        className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-[#201c1c] dark:hover:bg-[#201c1c] transition-colors"
         aria-label="Informations sur la courbe"
       >
         <Info size={24} />

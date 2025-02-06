@@ -2,11 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { CurveType, ExponentialParams } from '../../types/curves';
 import CurveVisualization from '../CurveVisualization';
 import { saveSvg, saveSvg2D } from '../../utils/export';
-import { ArrowDown, ArrowLeft, Sun, Moon } from 'lucide-react';
+import { ArrowDown, ArrowLeft, Sun, Moon, Play, Pause } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import InfoButton from '../InfoButton';
 import { curveInfo } from '../../data/curveInfo';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAnimation } from '../../hooks/useAnimation';
 
 const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
   const { theme, toggleTheme } = useTheme();
@@ -17,6 +18,17 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
     theta_max: 2 * Math.PI,
     points: 1000
   });
+
+  const { 
+    isAnimating, 
+    toggleAnimation, 
+    selectedParams,
+    toggleParam,
+    stepSize,
+    setStepSize,
+    stepsPerSecond,
+    setStepsPerSecond
+  } = useAnimation(params, setParams);
 
   const generatePoints = useCallback(() => {
     const points: [number, number][] = [];
@@ -130,7 +142,7 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
         <div className="flex flex-row space-x-2">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-[#201c1c] dark:hover:bg-[#201c1c] transition-colors"
             aria-label={theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'}
           >
             {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
@@ -143,6 +155,18 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
             <span>Exporter en SVG</span>
             <ArrowDown size={16} />
           </button>
+          <button
+            onClick={toggleAnimation}
+            disabled={selectedParams.size === 0}
+            className={`p-2 rounded-full transition-colors ${
+              selectedParams.size === 0
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
+            }`}
+            aria-label={isAnimating ? 'Arrêter l\'animation' : 'Démarrer l\'animation'}
+          >
+            {isAnimating ? <Pause size={24} /> : <Play size={24} />}
+          </button>
         </div>
       </div>
       
@@ -153,6 +177,44 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Nombre de termes (n)
             </label>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2 ml-auto">
+                <button
+                  onClick={() => toggleParam('n')}
+                  className={`px-3 py-1 rounded-md text-xs transition-colors ${
+                    selectedParams.has('n')
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                      : 'bg-gray-200 hover:bg-gray-300 dark:bg-dark-secondary dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  Animer
+                </button>
+                {selectedParams.has('n') && (
+                  <>
+                    <input
+                      type="number"
+                      value={stepSize}
+                      onChange={(e) => setStepSize(Number(e.target.value))}
+                      min={0.1}
+                      max={10}
+                      step={0.1}
+                      className="w-16 px-2 py-1 border rounded-md text-xs dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+                    />
+                    <span className="text-xs text-gray-700 dark:text-white">pas</span>
+                    <input
+                      type="number"
+                      value={stepsPerSecond}
+                      onChange={(e) => setStepsPerSecond(Number(e.target.value))}
+                      min={0.1}
+                      max={10}
+                      step={0.1}
+                      className="w-16 px-2 py-1 border rounded-md text-xs dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+                    />
+                    <span className="text-xs text-gray-700 dark:text-white">pas/s</span>
+                  </>
+                )}
+              </div>
+            </div>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
               <input
                 type="range"
@@ -167,9 +229,9 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 type="number"
                 value={params.n}
                 onChange={(e) => handleParamChange('n', parseInt(e.target.value))}
+                step={getParameterStep('n')}
                 min={getParameterMin('n')}
                 max={getParameterMax('n')}
-                step={getParameterStep('n')}
                 className="w-24 px-2 py-1 border rounded-md text-sm dark:bg-dark-secondary dark:text-white dark:border-gray-700"
               />
             </div>
@@ -180,11 +242,49 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
             <div key={i} className="space-y-4 border-t dark:border-gray-700 pt-4">
               <h3 className="font-medium text-gray-900 dark:text-white">Terme {i + 1}</h3>
               
-              {/* Longueur ai */}
+              {/* Amplitude ai */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-white">
-                  Longueur a{i + 1}
+                  Amplitude a{i + 1}
                 </label>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2 ml-auto">
+                    <button
+                      onClick={() => toggleParam(`a${i}` as keyof ExponentialParams)}
+                      className={`px-3 py-1 rounded-md text-xs transition-colors ${
+                        selectedParams.has(`a${i}` as keyof ExponentialParams)
+                          ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                          : 'bg-gray-200 hover:bg-gray-300 dark:bg-dark-secondary dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      }`}
+                    >
+                      Animer
+                    </button>
+                    {selectedParams.has(`a${i}` as keyof ExponentialParams) && (
+                      <>
+                        <input
+                          type="number"
+                          value={stepSize}
+                          onChange={(e) => setStepSize(Number(e.target.value))}
+                          min={0.1}
+                          max={10}
+                          step={0.1}
+                          className="w-16 px-2 py-1 border rounded-md text-xs dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+                        />
+                        <span className="text-xs text-gray-700 dark:text-white">pas</span>
+                        <input
+                          type="number"
+                          value={stepsPerSecond}
+                          onChange={(e) => setStepsPerSecond(Number(e.target.value))}
+                          min={0.1}
+                          max={10}
+                          step={0.1}
+                          className="w-16 px-2 py-1 border rounded-md text-xs dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+                        />
+                        <span className="text-xs text-gray-700 dark:text-white">pas/s</span>
+                      </>
+                    )}
+                  </div>
+                </div>
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
                   <input
                     type="range"
@@ -212,6 +312,44 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-white">
                   Vitesse b{i + 1}
                 </label>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2 ml-auto">
+                    <button
+                      onClick={() => toggleParam(`b${i}` as keyof ExponentialParams)}
+                      className={`px-3 py-1 rounded-md text-xs transition-colors ${
+                        selectedParams.has(`b${i}` as keyof ExponentialParams)
+                          ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                          : 'bg-gray-200 hover:bg-gray-300 dark:bg-dark-secondary dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      }`}
+                    >
+                      Animer
+                    </button>
+                    {selectedParams.has(`b${i}` as keyof ExponentialParams) && (
+                      <>
+                        <input
+                          type="number"
+                          value={stepSize}
+                          onChange={(e) => setStepSize(Number(e.target.value))}
+                          min={0.1}
+                          max={10}
+                          step={0.1}
+                          className="w-16 px-2 py-1 border rounded-md text-xs dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+                        />
+                        <span className="text-xs text-gray-700 dark:text-white">pas</span>
+                        <input
+                          type="number"
+                          value={stepsPerSecond}
+                          onChange={(e) => setStepsPerSecond(Number(e.target.value))}
+                          min={0.1}
+                          max={10}
+                          step={0.1}
+                          className="w-16 px-2 py-1 border rounded-md text-xs dark:bg-dark-secondary dark:text-white dark:border-gray-700"
+                        />
+                        <span className="text-xs text-gray-700 dark:text-white">pas/s</span>
+                      </>
+                    )}
+                  </div>
+                </div>
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
                   <input
                     type="range"
@@ -219,13 +357,13 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                     max={getParameterMax('b')}
                     step={getParameterStep('b')}
                     value={params.b[i]}
-                    onChange={(e) => handleParamChange('b', parseInt(e.target.value), i)}
+                    onChange={(e) => handleParamChange('b', parseFloat(e.target.value), i)}
                     className="w-full dark:bg-dark"
                   />
                   <input
                     type="number"
                     value={params.b[i]}
-                    onChange={(e) => handleParamChange('b', parseInt(e.target.value), i)}
+                    onChange={(e) => handleParamChange('b', parseFloat(e.target.value), i)}
                     step={getParameterStep('b')}
                     min={getParameterMin('b')}
                     max={getParameterMax('b')}
