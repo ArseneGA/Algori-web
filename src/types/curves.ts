@@ -65,4 +65,17 @@ export interface HypertrochoideParams {
   points: number;
 }
 
-export type CurveType = 'lissajous2d' | 'lissajous3d' | 'clelie3d' | 'exponential' | 'hypertrochoide';
+export interface MaurerRoseParams {
+  n: number;      // Nombre de segments
+  d: number;      // Angle en degrés
+  k: number;      // Paramètre de forme
+  points: number; // Nombre de points pour le tracé
+}
+
+export type CurveType = 
+  | "lissajous2d" 
+  | "lissajous3d" 
+  | "clelie3d" 
+  | "exponential" 
+  | "hypertrochoide"
+  | "maurerrose";  // Ajout du nouveau type

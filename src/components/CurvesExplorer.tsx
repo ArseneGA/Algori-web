@@ -82,6 +82,17 @@ const CurvesExplorer: React.FC = () => {
             Découvrez les motifs fascinants créés par les courbes hypertrochoïdes.
           </p>
         </Link>
+
+        {/* Rose de Maurer */}
+        <Link 
+          to="/maurerrose"
+          className={cardClassName}
+        >
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Rose de Maurer</h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            Découvrez les motifs fascinants des roses de Maurer, créés par l'interaction entre angles et rotations.
+          </p>
+        </Link>
       </div>
     </div>
   );
