@@ -2,11 +2,15 @@ import React, { useState, useCallback, useRef } from 'react';
 import { CurveType, Clelie3DParams } from '../../types/curves';
 import Curve3DVisualization from '../Curve3DVisualization';
 import { saveSvg, savePly, saveSvg3D } from '../../utils/export';
-import { ArrowDown, ArrowLeft } from 'lucide-react';
+import { ArrowDown, ArrowLeft, Sun, Moon } from 'lucide-react';
 import * as THREE from 'three';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../../contexts/ThemeContext';
+import InfoButton from '../InfoButton';
+import { curveInfo } from '../../data/curveInfo';
 
 const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
+  const { theme, toggleTheme } = useTheme();
   const [params, setParams] = useState<Clelie3DParams>({
     a: 1,      // Rayon
     m: 2,      // Nombre de boucles
@@ -95,21 +99,31 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Courbe de Clélie 3D</h2>
         </div>
 
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+        <div className="flex flex-row space-x-2">
           <button
-            onClick={handleExportSVG}
-            className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            aria-label={theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'}
           >
-            <span>Exporter en SVG</span>
-            <ArrowDown size={16} />
+            {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
           </button>
-          <button
-            onClick={handleExportPLY}
-            className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors"
-          >
-            <span>Exporter en PLY</span>
-            <ArrowDown size={16} />
-          </button>
+          <InfoButton {...curveInfo.clelie3d} />
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+            <button
+              onClick={handleExportSVG}
+              className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            >
+              <span>Exporter en SVG</span>
+              <ArrowDown size={16} />
+            </button>
+            <button
+              onClick={handleExportPLY}
+              className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors"
+            >
+              <span>Exporter en PLY</span>
+              <ArrowDown size={16} />
+            </button>
+          </div>
         </div>
       </div>
       
