@@ -3,9 +3,10 @@ import React, { useEffect, useRef } from 'react';
 interface CurveVisualizationProps {
   points: [number, number][];
   style?: React.CSSProperties;
+  lineWidth?: number;
 }
 
-const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], style }) => {
+const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], style, lineWidth = 2 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], st
     // Dessiner la courbe
     ctx.beginPath();
     ctx.strokeStyle = '#4f46e5'; // Indigo-600
-    ctx.lineWidth = 2;
+    ctx.lineWidth = lineWidth;
 
     points.forEach(([x, y], i) => {
       const canvasX = centerX + scale * x;
@@ -62,7 +63,7 @@ const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], st
     });
 
     ctx.stroke();
-  }, [points]);
+  }, [points, lineWidth]);
 
   return (
     <canvas 

@@ -2,9 +2,12 @@ import React, { useState, useCallback, useRef } from 'react';
 import { CurveType, Clelie3DParams } from '../../types/curves';
 import Curve3DVisualization from '../Curve3DVisualization';
 import { saveSvg, savePly, saveSvg3D } from '../../utils/export';
-import { ArrowDown, ArrowLeft } from 'lucide-react';
+import { ArrowDown, ArrowLeft, Sun, Moon } from 'lucide-react';
 import * as THREE from 'three';
 import { Link } from 'react-router-dom';
+import InfoButton from '../InfoButton';
+import { curveInfo } from '../../data/curveInfo';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
   const [params, setParams] = useState<Clelie3DParams>({
@@ -19,6 +22,8 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
     captureImage: () => string;
     getCamera: () => THREE.Camera;
   }>(null);
+
+  const { theme, toggleTheme } = useTheme();
 
   // Fonction corrigée pour générer les points de la courbe de Clélie
   const generatePoints = useCallback(() => {
@@ -97,15 +102,23 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
 
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
           <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            aria-label={theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'}
+          >
+            {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+          </button>
+          <InfoButton {...curveInfo.clelie3d} />
+          <button
             onClick={handleExportSVG}
-            className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors inline-flex items-center justify-center space-x-2"
           >
             <span>Exporter en SVG</span>
             <ArrowDown size={16} />
           </button>
           <button
             onClick={handleExportPLY}
-            className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors"
+            className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors inline-flex items-center justify-center space-x-2"
           >
             <span>Exporter en PLY</span>
             <ArrowDown size={16} />
