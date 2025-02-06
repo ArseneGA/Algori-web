@@ -72,10 +72,18 @@ export interface MaurerRoseParams {
   points: number; // Nombre de points pour le tracé
 }
 
+export interface HypocycloideParams {
+  R: number;      // Rayon du grand cercle
+  r: number;      // Rayon du petit cercle
+  tours: number;  // Nombre de tours
+  points: number; // Nombre de points pour le tracé
+}
+
 export type CurveType = 
   | "lissajous2d" 
   | "lissajous3d" 
   | "clelie3d" 
   | "exponential" 
   | "hypertrochoide"
-  | "maurerrose";  // Ajout du nouveau type
+  | "maurerrose"
+  | "hypocycloide";  // Ajout du nouveau type
