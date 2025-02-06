@@ -122,6 +122,7 @@ const MaurerRoseTab: React.FC<{ curveType: CurveType }> = () => {
             <CurveVisualization 
               points={generatePoints()}
               style={{ width: '100%', height: '100%' }}
+              strokeWidth={0.4}
             />
           </div>
         </div>
