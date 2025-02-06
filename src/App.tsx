@@ -10,6 +10,7 @@ import Lissajous3DTab from './components/tabs/Lissajous3DTab';
 import Clelie3DTab from './components/tabs/Clelie3DTab';
 import ExponentialTab from './components/tabs/ExponentialTab';
 import HypertrochoideTab from './components/tabs/HypertrochoideTab';
+import MaurerRoseTab from './components/tabs/MaurerRoseTab';
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
@@ -43,6 +44,7 @@ const App: React.FC = () => {
             <Route path="/clelie3d" element={<Clelie3DTab curveType="clelie3d" />} />
             <Route path="/exponential" element={<ExponentialTab curveType="exponential" />} />
             <Route path="/hypertrochoide" element={<HypertrochoideTab curveType="hypertrochoide" />} />
+            <Route path="/maurerrose" element={<MaurerRoseTab curveType="maurerrose" />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
