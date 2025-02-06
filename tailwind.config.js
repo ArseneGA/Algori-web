@@ -11,7 +11,8 @@ export default {
         },
         'gray': {
           '0': '#ffffff'
-        }
+        },
+        'button-dark': '#201c1c',
       },
       textColor: {
         'dark': {

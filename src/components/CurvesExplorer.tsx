@@ -1,30 +1,39 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const CurvesExplorer: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+
   // La classe commune pour toutes les cartes
   const cardClassName = `bg-white dark:bg-dark border dark:border-white p-6 rounded-lg shadow-lg 
     hover:shadow-xl hover:scale-[1.02] dark:hover:bg-dark-secondary
     transform transition-all duration-200 ease-in-out`;
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-0 dark:bg-dark">
-      {/* Bouton retour */}
-      <div className="mb-6 flex items-center">
-        <Link 
-          to="/" 
-          className="inline-flex items-center text-indigo-600 hover:text-indigo-700 dark:text-white dark:hover:text-gray-300 transition-colors"
+    <div className="p-2 sm:p-6 space-y-4 sm:space-y-6 bg-gray-0 dark:bg-dark">
+      <div className="flex justify-between items-center">
+        <div className="space-y-4">
+          <div className="flex items-center">
+            <Link 
+              to="/" 
+              className="inline-flex items-center text-indigo-600 hover:text-indigo-700 dark:text-white dark:hover:text-gray-300 transition-colors"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Retour à l'accueil
+            </Link>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Explorer les courbes</h2>
+        </div>
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-[#201c1c] dark:hover:bg-[#201c1c] transition-colors"
+          aria-label={theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Retour à l'accueil
-        </Link>
+          {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+        </button>
       </div>
-
-      {/* Titre */}
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-        Explorer les Courbes
-      </h1>
 
       {/* Grille des courbes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
