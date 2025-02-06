@@ -93,6 +93,17 @@ const CurvesExplorer: React.FC = () => {
             Découvrez les motifs fascinants des roses de Maurer, créés par l'interaction entre angles et rotations.
           </p>
         </Link>
+
+        {/* Hypocycloïde */}
+        <Link 
+          to="/hypocycloide"
+          className={cardClassName}
+        >
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Hypocycloïde</h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            Explorez les courbes hypocycloïdes et leurs différentes formes selon le rapport des rayons.
+          </p>
+        </Link>
       </div>
     </div>
   );
