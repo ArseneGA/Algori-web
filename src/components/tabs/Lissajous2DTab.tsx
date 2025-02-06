@@ -1,11 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowDown } from 'lucide-react';
+import { ArrowLeft, ArrowDown, Sun, Moon } from 'lucide-react';
 import { CurveType, Curve2DParams } from '../../types/curves';
 import CurveVisualization from '../CurveVisualization';
 import { saveSvg2D } from '../../utils/export';
+import InfoButton from '../InfoButton';
+import { curveInfo } from '../../data/curveInfo';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Lissajous2DTab: React.FC<{ curveType: CurveType }> = () => {
+  const { theme, toggleTheme } = useTheme();
   const [params, setParams] = useState<Curve2DParams>({
     A: 1,
     B: 1,
@@ -61,13 +65,23 @@ const Lissajous2DTab: React.FC<{ curveType: CurveType }> = () => {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Courbe de Lissajous 2D</h2>
         </div>
 
-        <button
-          onClick={handleExportSVG}
-          className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
-        >
-          <span>Exporter en SVG</span>
-          <ArrowDown size={16} />
-        </button>
+        <div className="flex flex-row space-x-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            aria-label={theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'}
+          >
+            {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+          </button>
+          <InfoButton {...curveInfo.lissajous2d} />
+          <button
+            onClick={handleExportSVG}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors flex items-center space-x-2"
+          >
+            <span>Exporter en SVG</span>
+            <ArrowDown size={16} />
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
