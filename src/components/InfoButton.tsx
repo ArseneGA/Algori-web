@@ -45,7 +45,9 @@ const InfoButton: React.FC<InfoButtonProps> = ({ title, content }) => {
               {content.equations && (
                 <div className="my-6 space-y-4">
                   {content.equations.map((eq, index) => (
-                    <BlockMath key={index}>{eq}</BlockMath>
+                    <pre key={index} className="bg-gray-100 dark:bg-dark p-2 rounded">
+                      {eq}
+                    </pre>
                   ))}
                 </div>
               )}
