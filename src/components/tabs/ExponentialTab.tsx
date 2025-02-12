@@ -125,94 +125,76 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
   };
 
   return (
-    <div className="p-4 sm:p-8 space-y-8 bg-gradient-to-b from-black to-zinc-900 min-h-screen">
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/50 via-zinc-900/25 to-black -z-10"></div>
-
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-4">
-            <h2 className="text-4xl font-bold text-white tracking-tight">
-              Courbe Exponentielle
-            </h2>
-            <InfoButton {...curveInfo.exponential} />
-          </div>
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleAnimation}
-              disabled={selectedParams.size === 0}
-              className={`p-2 rounded-lg transition-colors ${
-                selectedParams.size === 0
-                  ? 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
-                  : 'bg-zinc-800 text-white hover:bg-zinc-700'
-              }`}
-              aria-label={isAnimating ? 'Arrêter l\'animation' : 'Démarrer l\'animation'}
-            >
-              {isAnimating ? <Pause size={24} /> : <Play size={24} />}
-            </button>
-            {selectedParams.size > 0 && (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  value={stepsPerSecond}
-                  onChange={(e) => setStepsPerSecond(Number(e.target.value))}
-                  min={0.1}
-                  max={10}
-                  step={0.1}
-                  className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                />
-                <span className="text-zinc-400 text-sm">pas/s</span>
-              </div>
-            )}
-          </div>
+    <div className="min-h-screen bg-black p-4 sm:p-6">
+      {/* Header avec titre et bouton retour */}
+      <div className="max-w-7xl mx-auto mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            Courbe Exponentielle
+          </h1>
+          <Link 
+            to="/curves" 
+            className="inline-flex items-center text-zinc-400 hover:text-white transition-all duration-300 group"
+          >
+            <ArrowLeft className="mr-2 h-5 w-5 group-hover:translate-x-[-4px] transition-transform" />
+            Retour aux courbes
+          </Link>
         </div>
-        <Link 
-          to="/curves" 
-          className="inline-flex items-center text-zinc-400 hover:text-white transition-all duration-300 group px-4 py-2 rounded-lg border border-zinc-800/50 hover:border-zinc-700/50 bg-zinc-900/50 backdrop-blur-sm"
-        >
-          <ArrowLeft className="mr-2 h-5 w-5 group-hover:translate-x-[-4px] transition-transform" />
-          Retour aux courbes
-        </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="order-2 lg:order-1 space-y-8">
-          <div className="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl border border-zinc-800/50 shadow-2xl">
-            <h3 className="text-xl font-medium text-white mb-6">Paramètres</h3>
+      {/* Contenu principal */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        {/* Panneau de contrôle */}
+        <div className="order-2 lg:order-1">
+          <div className="bg-zinc-900/50 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border border-zinc-800/50 shadow-2xl mb-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-medium text-white">Paramètres</h3>
+              <div className="flex items-center gap-4">
+                <InfoButton 
+                  title={curveInfo.exponential.title} 
+                  content={curveInfo.exponential.content} 
+                />
+                <button
+                  onClick={toggleAnimation}
+                  disabled={selectedParams.size === 0}
+                  className={`p-2 rounded-lg transition-colors ${
+                    selectedParams.size === 0
+                      ? 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
+                      : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                  aria-label={isAnimating ? 'Arrêter l\'animation' : 'Démarrer l\'animation'}
+                >
+                  {isAnimating ? <Pause size={24} /> : <Play size={24} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Animation speed control */}
+            <div className="mb-6 flex flex-wrap items-center gap-4">
+              {selectedParams.size > 0 && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    value={stepsPerSecond}
+                    onChange={(e) => setStepsPerSecond(Number(e.target.value))}
+                    min={0.1}
+                    max={10}
+                    step={0.1}
+                    className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
+                  />
+                  <span className="text-zinc-400 text-sm">pas/s</span>
+                </div>
+              )}
+            </div>
+
+            {/* Paramètres */}
             <div className="space-y-6">
               {/* Nombre de termes */}
               <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-white">
-                    Nombre de termes (n)
-                  </label>
-                  <div className="flex items-center space-x-4 ml-auto">
-                    <button
-                      onClick={() => toggleParam('n')}
-                      className={`px-3 py-1 rounded-md text-xs transition-colors ${
-                        selectedParams.has('n')
-                          ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                          : 'bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800/70'
-                      }`}
-                    >
-                      Animer
-                    </button>
-                    {selectedParams.has('n') && (
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="number"
-                          value={stepSize}
-                          onChange={(e) => setStepSize(Number(e.target.value))}
-                          min={0.1}
-                          max={10}
-                          step={0.1}
-                          className="w-16 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center text-xs focus:outline-none focus:border-zinc-600"
-                        />
-                        <span className="text-xs text-zinc-400">pas</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                <label className="text-sm font-medium text-white mb-2 block">
+                  Nombre de termes (n)
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2 items-center">
                   <input
                     type="range"
                     min={1}
@@ -221,111 +203,55 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                     onChange={(e) => handleParamChange('n', parseInt(e.target.value))}
                     className="w-full"
                   />
-                  <input
-                    type="number"
-                    value={params.n}
-                    onChange={(e) => handleParamChange('n', parseInt(e.target.value))}
-                    min={1}
-                    max={5}
-                    className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                  />
+                  <div className="flex items-center gap-2 min-w-[100px]">
+                    <input
+                      type="number"
+                      value={params.n}
+                      onChange={(e) => handleParamChange('n', parseInt(e.target.value))}
+                      min={1}
+                      max={5}
+                      className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Paramètres pour chaque terme */}
+              {/* Paramètres a et b */}
               {Array.from({ length: params.n }).map((_, i) => (
-                <div key={i} className="space-y-4 border-t border-zinc-800 pt-4">
-                  <h4 className="text-lg font-medium text-white">Terme {i + 1}</h4>
-                  
-                  {/* Amplitude ai */}
+                <div key={i} className="space-y-4">
                   <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-medium text-white">
-                        Amplitude a{i + 1}
-                      </label>
-                      <div className="flex items-center space-x-4 ml-auto">
-                        <button
-                          onClick={() => toggleParam(`a${i}` as keyof ExponentialParams)}
-                          className={`px-3 py-1 rounded-md text-xs transition-colors ${
-                            selectedParams.has(`a${i}` as keyof ExponentialParams)
-                              ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                              : 'bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800/70'
-                          }`}
-                        >
-                          Animer
-                        </button>
-                        {selectedParams.has(`a${i}` as keyof ExponentialParams) && (
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="number"
-                              value={stepSize}
-                              onChange={(e) => setStepSize(Number(e.target.value))}
-                              min={0.1}
-                              max={10}
-                              step={0.1}
-                              className="w-16 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center text-xs focus:outline-none focus:border-zinc-600"
-                            />
-                            <span className="text-xs text-zinc-400">pas</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <label className="text-sm font-medium text-white mb-2 block">
+                      Longueur a{i} 
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-2 items-center">
                       <input
                         type="range"
                         min={0}
-                        max={2}
+                        max={10}
                         step={0.1}
                         value={params.a[i]}
                         onChange={(e) => handleParamChange('a', parseFloat(e.target.value), i)}
                         className="w-full"
                       />
-                      <input
-                        type="number"
-                        value={params.a[i]}
-                        onChange={(e) => handleParamChange('a', parseFloat(e.target.value), i)}
-                        step={0.1}
-                        min={0}
-                        max={2}
-                        className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                      />
+                      <div className="flex items-center gap-2 min-w-[100px]">
+                        <input
+                          type="number"
+                          value={params.a[i]}
+                          onChange={(e) => handleParamChange('a', parseFloat(e.target.value), i)}
+                          step={0.1}
+                          min={0}
+                          max={10}
+                          className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Vitesse bi */}
                   <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-medium text-white">
-                        Vitesse b{i + 1}
-                      </label>
-                      <div className="flex items-center space-x-4 ml-auto">
-                        <button
-                          onClick={() => toggleParam(`b${i}` as keyof ExponentialParams)}
-                          className={`px-3 py-1 rounded-md text-xs transition-colors ${
-                            selectedParams.has(`b${i}` as keyof ExponentialParams)
-                              ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                              : 'bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800/70'
-                          }`}
-                        >
-                          Animer
-                        </button>
-                        {selectedParams.has(`b${i}` as keyof ExponentialParams) && (
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="number"
-                              value={stepSize}
-                              onChange={(e) => setStepSize(Number(e.target.value))}
-                              min={0.1}
-                              max={10}
-                              step={0.1}
-                              className="w-16 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center text-xs focus:outline-none focus:border-zinc-600"
-                            />
-                            <span className="text-xs text-zinc-400">pas</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <label className="text-sm font-medium text-white mb-2 block">
+                      Vitesse b{i}
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-2 items-center">
                       <input
                         type="range"
                         min={0}
@@ -335,93 +261,100 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                         onChange={(e) => handleParamChange('b', parseFloat(e.target.value), i)}
                         className="w-full"
                       />
-                      <input
-                        type="number"
-                        value={params.b[i]}
-                        onChange={(e) => handleParamChange('b', parseFloat(e.target.value), i)}
-                        step={0.1}
-                        min={0}
-                        max={10}
-                        className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                      />
+                      <div className="flex items-center gap-2 min-w-[100px]">
+                        <input
+                          type="number"
+                          value={params.b[i]}
+                          onChange={(e) => handleParamChange('b', parseFloat(e.target.value), i)}
+                          step={0.1}
+                          min={0}
+                          max={10}
+                          className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
 
-              {/* Angle maximum (θ) */}
-              <div key="theta_max" className="mb-6">
-                <div className="flex flex-col space-y-2">
-                  <label className="text-sm font-medium text-white">
-                    Angle maximum (θ)
-                  </label>
-                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              {/* Angle maximum */}
+              <div>
+                <label className="text-sm font-medium text-white mb-2 block">
+                  Angle maximum (θ)
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2 items-center">
+                  <input
+                    type="range"
+                    min={0.1}
+                    max={4}
+                    step={0.1}
+                    value={params.theta_max / Math.PI}
+                    onChange={(e) => handleParamChange(
+                      'theta_max',
+                      parseFloat(e.target.value) * Math.PI
+                    )}
+                    className="w-full"
+                  />
+                  <div className="flex items-center gap-2 min-w-[100px]">
                     <input
-                      type="range"
-                      min={0.1}
-                      max={4}
-                      step={0.1}
-                      value={params.theta_max / Math.PI}
+                      type="number"
+                      value={(params.theta_max / Math.PI).toFixed(1)}
                       onChange={(e) => handleParamChange(
                         'theta_max',
                         parseFloat(e.target.value) * Math.PI
                       )}
-                      className="w-full"
+                      step={0.1}
+                      min={0.1}
+                      max={4}
+                      className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
                     />
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="number"
-                        value={(params.theta_max / Math.PI).toFixed(1)}
-                        onChange={(e) => handleParamChange(
-                          'theta_max',
-                          parseFloat(e.target.value) * Math.PI
-                        )}
-                        step={0.1}
-                        min={0.1}
-                        max={4}
-                        className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                      />
-                      <span className="text-white">π</span>
-                    </div>
+                    <span className="text-white">π</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl border border-zinc-800/50 shadow-2xl">
+          {/* Style et Export */}
+          <div className="bg-zinc-900/50 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border border-zinc-800/50 shadow-2xl">
             <h3 className="text-xl font-medium text-white mb-6">Style et Export</h3>
             <div className="space-y-6">
-              <div className="grid grid-cols-1 gap-6">
-                <label className="text-sm font-medium text-white mb-2 block">
-                  Épaisseur du trait
-                </label>
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={strokeWidth}
-                    onChange={(e) => setStrokeWidth(Number(e.target.value))}
-                    className="w-full"
-                  />
-                  <input
-                    type="number"
-                    value={strokeWidth}
-                    onChange={(e) => setStrokeWidth(Number(e.target.value))}
-                    min="1"
-                    max="10"
-                    className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-6">
+              {/* Contrôles de style */}
+              <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-white mb-2 block">
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Épaisseur du trait
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-2 items-center">
+                    <input
+                      type="range"
+                      min={0.05}
+                      max={10}
+                      step={0.05}
+                      value={strokeWidth}
+                      onChange={(e) => setStrokeWidth(parseFloat(e.target.value))}
+                      className="w-full"
+                    />
+                    <div className="flex items-center gap-2 min-w-[100px]">
+                      <input
+                        type="number"
+                        value={strokeWidth}
+                        onChange={(e) => setStrokeWidth(parseFloat(e.target.value))}
+                        min={0.05}
+                        max={10}
+                        step={0.05}
+                        className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
+                      />
+                      <span className="text-white">px</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
                     Couleur du trait
                   </label>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
                     <input
                       type="color"
                       value={strokeColor}
@@ -433,16 +366,16 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                       value={strokeColor}
                       onChange={(e) => setStrokeColor(e.target.value)}
                       className="w-32 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white uppercase text-center focus:outline-none focus:border-zinc-600"
-                      placeholder="#FFFFFF"
+                      placeholder="#000000"
                     />
                   </div>
                 </div>
-                
+
                 <div>
-                  <label className="text-sm font-medium text-white mb-2 block">
-                    Couleur du fond
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Couleur de fond
                   </label>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
                     <input
                       type="color"
                       value={backgroundColor}
@@ -460,10 +393,11 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
                 </div>
               </div>
               
+              {/* Bouton Export */}
               <div className="pt-4 border-t border-zinc-800">
                 <button
                   onClick={handleExportSVG}
-                  className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-all duration-300 flex items-center space-x-2"
+                  className="w-full sm:w-auto px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
                   <span>Exporter en SVG</span>
                   <ArrowDown size={16} />
@@ -473,6 +407,7 @@ const ExponentialTab: React.FC<{ curveType: CurveType }> = () => {
           </div>
         </div>
 
+        {/* Visualisation */}
         <div className="order-1 lg:order-2">
           <div className="aspect-square w-full max-w-[500px] mx-auto bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800/50 shadow-2xl">
             <CurveVisualization 

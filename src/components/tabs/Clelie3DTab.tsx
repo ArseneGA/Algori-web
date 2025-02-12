@@ -97,81 +97,90 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
   };
 
   return (
-    <div className="p-4 sm:p-8 space-y-8 bg-gradient-to-b from-black to-zinc-900 min-h-screen">
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/50 via-zinc-900/25 to-black -z-10"></div>
-
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-4">
-            <h2 className="text-4xl font-bold text-white tracking-tight">
-              Courbe de Clélie 3D
-            </h2>
-            <InfoButton {...curveInfo.clelie3d} />
-          </div>
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleAnimation}
-              disabled={selectedParams.size === 0}
-              className={`p-2 rounded-lg transition-colors ${
-                selectedParams.size === 0
-                  ? 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
-                  : 'bg-zinc-800 text-white hover:bg-zinc-700'
-              }`}
-              aria-label={isAnimating ? 'Arrêter l\'animation' : 'Démarrer l\'animation'}
-            >
-              {isAnimating ? <Pause size={24} /> : <Play size={24} />}
-            </button>
-            {selectedParams.size > 0 && (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  value={stepsPerSecond}
-                  onChange={(e) => setStepsPerSecond(Number(e.target.value))}
-                  min={0.1}
-                  max={10}
-                  step={0.1}
-                  className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                />
-                <span className="text-zinc-400 text-sm">pas/s</span>
-              </div>
-            )}
-          </div>
+    <div className="min-h-screen bg-black p-4 sm:p-6">
+      {/* Header avec titre et bouton retour */}
+      <div className="max-w-7xl mx-auto mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            Courbe de Clélie 3D
+          </h1>
+          <Link 
+            to="/curves" 
+            className="inline-flex items-center text-zinc-400 hover:text-white transition-all duration-300 group"
+          >
+            <ArrowLeft className="mr-2 h-5 w-5 group-hover:translate-x-[-4px] transition-transform" />
+            Retour aux courbes
+          </Link>
         </div>
-        <Link 
-          to="/curves" 
-          className="inline-flex items-center text-zinc-400 hover:text-white transition-all duration-300 group px-4 py-2 rounded-lg border border-zinc-800/50 hover:border-zinc-700/50 bg-zinc-900/50 backdrop-blur-sm"
-        >
-          <ArrowLeft className="mr-2 h-5 w-5 group-hover:translate-x-[-4px] transition-transform" />
-          Retour aux courbes
-        </Link>
       </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      {/* Contenu principal */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        {/* Panneau de contrôle */}
         <div className="order-2 lg:order-1">
-          {/* Panneau Paramètres */}
-          <div className="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl border border-zinc-800/50 shadow-2xl mb-8">
-            <h3 className="text-xl font-medium text-white mb-6">Paramètres</h3>
-            <div className="grid grid-cols-2 gap-6">
+          <div className="bg-zinc-900/50 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border border-zinc-800/50 shadow-2xl mb-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-medium text-white">Paramètres</h3>
+              <div className="flex items-center gap-4">
+                <InfoButton 
+                  title={curveInfo.clelie3d.title} 
+                  content={curveInfo.clelie3d.content} 
+                />
+                <button
+                  onClick={toggleAnimation}
+                  disabled={selectedParams.size === 0}
+                  className={`p-2 rounded-lg transition-colors ${
+                    selectedParams.size === 0
+                      ? 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
+                      : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                  aria-label={isAnimating ? 'Arrêter l\'animation' : 'Démarrer l\'animation'}
+                >
+                  {isAnimating ? <Pause size={24} /> : <Play size={24} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Animation speed control */}
+            <div className="mb-6 flex flex-wrap items-center gap-4">
+              {selectedParams.size > 0 && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    value={stepsPerSecond}
+                    onChange={(e) => setStepsPerSecond(Number(e.target.value))}
+                    min={0.1}
+                    max={10}
+                    step={0.1}
+                    className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
+                  />
+                  <span className="text-zinc-400 text-sm">pas/s</span>
+                </div>
+              )}
+            </div>
+
+            {/* Paramètres */}
+            <div className="space-y-4">
               {Object.entries(params).map(([key, value]) => (
-                <div key={key} className={key === 'points' ? 'col-span-2' : ''}>
-                  <div className="flex justify-between items-center mb-2">
+                <div key={key}>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                     <label className="text-sm font-medium text-white">
                       {getParameterLabel(key)}
                     </label>
                     {key !== 'points' && (
-                      <div className="flex items-center space-x-4 ml-auto">
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() => toggleParam(key as keyof Clelie3DParams)}
-                          className={`px-3 py-1 rounded-md text-xs transition-colors ${
+                          className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                             selectedParams.has(key as keyof Clelie3DParams)
-                              ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                              : 'bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800/70'
+                              ? 'bg-zinc-800 text-white'
+                              : 'bg-zinc-800/50 text-zinc-400 hover:text-white'
                           }`}
                         >
-                          Animer
+                          {selectedParams.has(key as keyof Clelie3DParams) ? 'Animé' : 'Animer'}
                         </button>
                         {selectedParams.has(key as keyof Clelie3DParams) && (
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center gap-2">
                             <input
                               type="number"
                               value={stepSize}
@@ -179,15 +188,15 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
                               min={0.1}
                               max={10}
                               step={0.1}
-                              className="w-16 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center text-xs focus:outline-none focus:border-zinc-600"
+                              className="w-16 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-md text-white text-xs text-center focus:outline-none focus:border-zinc-600"
                             />
-                            <span className="text-xs text-zinc-400">pas</span>
+                            <span className="text-zinc-400 text-xs">pas</span>
                           </div>
                         )}
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-1">
+                  <div className="flex flex-col sm:flex-row gap-2 items-center">
                     <input
                       type="range"
                       min={getParameterMin(key)}
@@ -202,37 +211,40 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
                       )}
                       className="w-full"
                     />
-                    <input
-                      type="number"
-                      value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
-                      onChange={(e) => handleParamChange(
-                        key as keyof Clelie3DParams,
-                        key === 'longueur' 
-                          ? parseFloat(e.target.value) * Math.PI 
-                          : parseFloat(e.target.value)
-                      )}
-                      step={getParameterStep(key)}
-                      min={getParameterMin(key)}
-                      max={getParameterMax(key)}
-                      className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
-                    />
-                    {key === 'longueur' && <span className="text-white">π</span>}
+                    <div className="flex items-center gap-2 min-w-[100px]">
+                      <input
+                        type="number"
+                        value={key === 'longueur' ? (value / Math.PI).toFixed(1) : value}
+                        onChange={(e) => handleParamChange(
+                          key as keyof Clelie3DParams,
+                          key === 'longueur'
+                            ? parseFloat(e.target.value) * Math.PI
+                            : parseFloat(e.target.value)
+                        )}
+                        step={getParameterStep(key)}
+                        min={getParameterMin(key)}
+                        max={getParameterMax(key)}
+                        className="w-20 px-2 py-1 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white text-center focus:outline-none focus:border-zinc-600"
+                      />
+                      {key === 'longueur' && <span className="text-white">π</span>}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Panneau Style et Export */}
-          <div className="bg-zinc-900/50 backdrop-blur-sm p-8 rounded-2xl border border-zinc-800/50 shadow-2xl">
+          {/* Style et Export */}
+          <div className="bg-zinc-900/50 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border border-zinc-800/50 shadow-2xl">
             <h3 className="text-xl font-medium text-white mb-6">Style et Export</h3>
             <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              {/* Contrôles de couleur */}
+              <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-white mb-2 block">
-                    Couleur du trait
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Couleur de la courbe
                   </label>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
                     <input
                       type="color"
                       value={strokeColor}
@@ -248,12 +260,12 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
-                  <label className="text-sm font-medium text-white mb-2 block">
-                    Couleur du fond
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Couleur de fond
                   </label>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
                     <input
                       type="color"
                       value={backgroundColor}
@@ -271,33 +283,33 @@ const Clelie3DTab: React.FC<{ curveType: CurveType }> = () => {
                 </div>
               </div>
               
-              <div className="pt-4 border-t border-zinc-800">
-                <div className="flex space-x-4">
-                  <button
-                    onClick={handleExportSVG}
-                    className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-all duration-300 flex items-center space-x-2"
-                  >
-                    <span>Exporter en SVG</span>
-                    <ArrowDown size={16} />
-                  </button>
-                  <button
-                    onClick={handleExportPLY}
-                    className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-all duration-300 flex items-center space-x-2"
-                  >
-                    <span>Exporter en PLY</span>
-                    <ArrowDown size={16} />
-                  </button>
-                </div>
+              {/* Boutons Export */}
+              <div className="pt-4 border-t border-zinc-800 flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={handleExportSVG}
+                  className="w-full sm:w-auto px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-all duration-300 flex items-center justify-center space-x-2"
+                >
+                  <span>Exporter en SVG</span>
+                  <ArrowDown size={16} />
+                </button>
+                <button
+                  onClick={handleExportPLY}
+                  className="w-full sm:w-auto px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-all duration-300 flex items-center justify-center space-x-2"
+                >
+                  <span>Exporter en PLY</span>
+                  <ArrowDown size={16} />
+                </button>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Visualisation */}
         <div className="order-1 lg:order-2">
           <div className="aspect-square w-full max-w-[500px] mx-auto bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800/50 shadow-2xl">
             <Curve3DVisualization 
               ref={visualizationRef}
-              params={params} 
+              params={params}
               getPoints={generatePoints}
               onPointsUpdate={setPoints}
               strokeColor={strokeColor}
