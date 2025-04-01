@@ -23,7 +23,8 @@ export const curveInfo: Record<string, CurveInfo> = {
       description: "Les courbes de Lissajous en deux dimensions sont définies par des fonctions sinusoïdales en fonction du temps.",
       equations: [
         "x = A·sin(p·t + δ·π)",
-        "y = B·sin(q·t)"
+        "y = B·sin(q·t)",
+        " ",
       ],
       description_equations: "où A et B sont les amplitudes, p et q sont les fréquences et δ est un déphasage.",
       cases: [
@@ -69,6 +70,7 @@ export const curveInfo: Record<string, CurveInfo> = {
         "x = A·sin(p·t + δ·π)",
         "y = B·sin(q·t)",
         "z = C·sin(r·t + φ·π)",
+        " ",
       ],
       description_equations: "où A, B, C sont les amplitudes, p, q, r sont les fréquences et δ, φ sont les déphasages.",
       cases: [

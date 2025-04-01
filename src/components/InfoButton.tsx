@@ -26,9 +26,61 @@ const InfoButton: React.FC<InfoButtonProps> = ({ title, content, currentParams }
     
     let result = equation;
     
-    // Remplacer les symboles spéciaux
-    result = result.replace(/delta/g, "δ");
-    result = result.replace(/phi/g, "φ");
+    // Remplacer les symboles spéciaux avant de remplacer les valeurs
+    if (result.includes("delta")) {
+      result = result.replace(/delta/g, "δ");
+    }
+    
+    if (result.includes("phi")) {
+      result = result.replace(/phi/g, "φ");
+    }
+    
+    // Gestion spéciale des équations de Lissajous 3D
+    if (title === "Courbe de Lissajous 3D") {
+      if (equation.startsWith("z = ")) {
+        if (currentParams.C && currentParams.r && currentParams.phi !== undefined) {
+          const C = currentParams.C.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const r = currentParams.r.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const phi = currentParams.phi.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          return `z = ${C}·sin(${r}·t + ${phi}·π)`;
+        }
+      } else if (equation.startsWith("x = ")) {
+        if (currentParams.A && currentParams.p && currentParams.delta !== undefined) {
+          const A = currentParams.A.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const p = currentParams.p.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const delta = currentParams.delta.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          return `x = ${A}·sin(${p}·t + ${delta}·π)`;
+        }
+      } else if (equation.startsWith("y = ")) {
+        if (currentParams.B && currentParams.q !== undefined) {
+          const B = currentParams.B.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const q = currentParams.q.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          return `y = ${B}·sin(${q}·t)`;
+        }
+      }
+      // Si on est dans Lissajous 3D mais aucun cas spécial n'a été traité, retourner l'équation
+      return result;
+    }
+    
+    // Gestion spéciale des équations de Lissajous 2D
+    if (title === "Courbe de Lissajous 2D") {
+      if (equation.startsWith("x = ")) {
+        if (currentParams.A && currentParams.p && currentParams.delta !== undefined) {
+          const A = currentParams.A.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const p = currentParams.p.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const delta = currentParams.delta.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          return `x = ${A}·sin(${p}·t + ${delta}·π)`;
+        }
+      } else if (equation.startsWith("y = ")) {
+        if (currentParams.B && currentParams.q !== undefined) {
+          const B = currentParams.B.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          const q = currentParams.q.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+          return `y = ${B}·sin(${q}·t)`;
+        }
+      }
+      // Si on est dans Lissajous 2D mais aucun cas spécial n'a été traité, retourner l'équation
+      return result;
+    }
     
     // Cas spécial pour la Rose de Maurer
     if (equation.includes("θn") && currentParams.n && currentParams.d) {
@@ -124,18 +176,57 @@ const InfoButton: React.FC<InfoButtonProps> = ({ title, content, currentParams }
                   <div className="mb-4">
                     <h3 className="text-xl font-medium text-white mb-4">Équations</h3>
                     <div className="space-y-2">
-                      {content.equations.map((equation, index) => (
-                        // Ne pas traiter la dernière équation qui contient l'explication
-                        index < content.equations.length - 1 ? (
+                      {content.equations.map((equation, index) => {
+                        // Traitement spécial pour Lissajous 2D
+                        if (title === "Courbe de Lissajous 2D") {
+                          if (index === 0 && currentParams.A && currentParams.p && currentParams.delta !== undefined) {
+                            // Équation x
+                            const A = currentParams.A.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const p = currentParams.p.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const delta = currentParams.delta.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            equation = `x = ${A}·sin(${p}·t + ${delta}·π)`;
+                          } else if (index === 1 && currentParams.B && currentParams.q !== undefined) {
+                            // Équation y
+                            const B = currentParams.B.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const q = currentParams.q.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            equation = `y = ${B}·sin(${q}·t)`;
+                          }
+                        }
+                        // Traitement spécial pour Lissajous 3D
+                        else if (title === "Courbe de Lissajous 3D") {
+                          if (index === 0 && currentParams.A && currentParams.p && currentParams.delta !== undefined) {
+                            // Équation x
+                            const A = currentParams.A.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const p = currentParams.p.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const delta = currentParams.delta.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            equation = `x = ${A}·sin(${p}·t + ${delta}·π)`;
+                          } else if (index === 1 && currentParams.B && currentParams.q !== undefined) {
+                            // Équation y
+                            const B = currentParams.B.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const q = currentParams.q.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            equation = `y = ${B}·sin(${q}·t)`;
+                          } else if (index === 2 && currentParams.C && currentParams.r && currentParams.phi !== undefined) {
+                            // Équation z
+                            const C = currentParams.C.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const r = currentParams.r.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            const phi = currentParams.phi.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                            equation = `z = ${C}·sin(${r}·t + ${phi}·π)`;
+                          }
+                        } else {
+                          // Pour les autres types de courbes, utiliser la fonction formatEquation
+                          equation = formatEquation(equation);
+                        }
+
+                        return index < content.equations.length - 1 ? (
                           <div key={index} className="mb-2 p-3 bg-zinc-800/50 rounded-lg border border-zinc-800 font-mono text-sm">
-                            {formatEquation(equation)}
+                            {equation}
                           </div>
                         ) : (
                           <div key={index} className="mt-4 text-zinc-400 text-sm">
                             {equation}
                           </div>
-                        )
-                      ))}
+                        );
+                      })}
                     </div>
                     {content.description_equations && (
                       <p className="mt-4 text-zinc-400">
