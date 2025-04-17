@@ -12,6 +12,8 @@ interface Curve3DVisualizationProps {
   style?: React.CSSProperties;
   className?: string;
   ref?: React.RefObject<{ captureImage: () => string }>;
+  strokeColor?: string;
+  backgroundColor?: string;
 }
 
 /**
@@ -23,7 +25,9 @@ const Scene = forwardRef<{ captureImage: () => string }, {
   getPoints?: () => THREE.Vector3[];
   onPointsUpdate?: (points: THREE.Vector3[]) => void;
   controlsOnly?: boolean;
-}>(({ params, onCameraChange, getPoints, onPointsUpdate, controlsOnly }, ref) => {
+  strokeColor?: string;
+  backgroundColor?: string;
+}>(({ params, onCameraChange, getPoints, onPointsUpdate, controlsOnly, strokeColor = '#FFFFFF', backgroundColor = '#000000' }, ref) => {
   const { camera, gl, scene } = useThree();
   const controlsRef = useRef<any>();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // 768px est le breakpoint md de Tailwind
@@ -142,11 +146,31 @@ const Scene = forwardRef<{ captureImage: () => string }, {
     setIsInitialized(false);
   }, [params.curveType]); // Ajouter curveType aux props si nécessaire
 
+  // Créer une géométrie avec des cylindres entre chaque point
+  const curveGeometry = useMemo(() => {
+    if (points.length < 2) return null;
+    
+    const geometry = new THREE.BufferGeometry();
+    const positions: number[] = [];
+    
+    for (let i = 0; i < points.length - 1; i++) {
+      const start = points[i];
+      const end = points[i + 1];
+      
+      positions.push(start.x, start.y, start.z);
+      positions.push(end.x, end.y, end.z);
+    }
+    
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    return geometry;
+  }, [points]);
+
   return (
     <>
+      <color attach="background" args={[backgroundColor]} />
       {!controlsOnly && (
         <line geometry={lineGeometry}>
-          <lineBasicMaterial attach="material" color="#4f46e5" linewidth={2} />
+          <lineBasicMaterial color={strokeColor} />
         </line>
       )}
 
@@ -176,8 +200,9 @@ const Scene = forwardRef<{ captureImage: () => string }, {
         </GizmoHelper>
       )}
 
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
+      <ambientLight intensity={0.8} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <pointLight position={[-10, -10, -10]} intensity={0.5} />
     </>
   );
 });
@@ -190,7 +215,9 @@ const Curve3DVisualization = forwardRef<{ captureImage: () => string }, Curve3DV
   getPoints,
   onPointsUpdate,
   style,
-  className
+  className,
+  strokeColor,
+  backgroundColor
 }, ref) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -228,6 +255,8 @@ const Curve3DVisualization = forwardRef<{ captureImage: () => string }, Curve3DV
             onCameraChange={onCameraChange}
             getPoints={getPoints}
             onPointsUpdate={onPointsUpdate}
+            strokeColor={strokeColor}
+            backgroundColor={backgroundColor}
           />
         </Canvas>
       </div>

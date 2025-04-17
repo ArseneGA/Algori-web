@@ -1,11 +1,16 @@
 import React, { useEffect, useRef } from 'react';
+import * as d3 from 'd3';
 
 interface CurveVisualizationProps {
   points: [number, number][];
   style?: React.CSSProperties;
+  strokeWidth?: number;
+  strokeColor?: string;
+  backgroundColor?: string;
+  fixedScale?: number;
 }
 
-const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], style }) => {
+const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], style, strokeWidth = 2, strokeColor = '#FFFFFF', backgroundColor = '#000000', fixedScale }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -22,33 +27,48 @@ const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], st
     // Effacer le canvas
     ctx.clearRect(0, 0, width, height);
 
+    // Appliquer la couleur de fond
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, width, height);
+
     if (!points || points.length === 0) return;
 
-    // Trouver les limites des points
-    let minX = points[0][0], maxX = points[0][0];
-    let minY = points[0][1], maxY = points[0][1];
-    
-    points.forEach(([x, y]) => {
-      minX = Math.min(minX, x);
-      maxX = Math.max(maxX, x);
-      minY = Math.min(minY, y);
-      maxY = Math.max(maxY, y);
-    });
+    let scale: number;
+    let centerX: number;
+    let centerY: number;
 
-    // Ajouter une marge
-    const margin = 20;
-    const scaleX = (width - 2 * margin) / (maxX - minX || 1);
-    const scaleY = (height - 2 * margin) / (maxY - minY || 1);
-    const scale = Math.min(scaleX, scaleY);
+    if (fixedScale !== undefined) {
+      // Utiliser l'échelle fixe fournie
+      scale = fixedScale;
+      centerX = width / 2;
+      centerY = height / 2;
+    } else {
+      // Trouver les limites des points
+      let minX = points[0][0], maxX = points[0][0];
+      let minY = points[0][1], maxY = points[0][1];
+      
+      points.forEach(([x, y]) => {
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
+      });
 
-    // Centrer la courbe
-    const centerX = (width - scale * (maxX + minX)) / 2;
-    const centerY = (height - scale * (maxY + minY)) / 2;
+      // Ajouter une marge
+      const margin = 20;
+      const scaleX = (width - 2 * margin) / (maxX - minX || 1);
+      const scaleY = (height - 2 * margin) / (maxY - minY || 1);
+      scale = Math.min(scaleX, scaleY);
+
+      // Centrer la courbe
+      centerX = (width - scale * (maxX + minX)) / 2;
+      centerY = (height - scale * (maxY + minY)) / 2;
+    }
 
     // Dessiner la courbe
     ctx.beginPath();
-    ctx.strokeStyle = '#4f46e5'; // Indigo-600
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = strokeWidth;
 
     points.forEach(([x, y], i) => {
       const canvasX = centerX + scale * x;
@@ -62,7 +82,7 @@ const CurveVisualization: React.FC<CurveVisualizationProps> = ({ points = [], st
     });
 
     ctx.stroke();
-  }, [points]);
+  }, [points, strokeWidth, strokeColor, backgroundColor, fixedScale]);
 
   return (
     <canvas 

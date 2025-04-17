@@ -27,6 +27,21 @@ const curves: { type: CurveType; title: string; description: string }[] = [
     type: 'exponential',
     title: 'Courbe Exponentielle',
     description: 'Une courbe basée sur des fonctions exponentielles.'
+  },
+  {
+    type: 'maurerrose',
+    title: 'Rose de Maurer',
+    description: 'Une courbe basée sur les roses polaires avec des motifs complexes.'
+  },
+  {
+    type: 'maurerrosebis',
+    title: 'Rose de Maurer BIS',
+    description: 'Une variante de la rose polaire qui forme différents nombres de pétales selon la parité de n.'
+  },
+  {
+    type: 'hypocycloide',
+    title: 'Hypocycloïde',
+    description: 'Une courbe générée par un point sur un cercle roulant à l\'intérieur d\'un cercle fixe.'
   }
 ];
 

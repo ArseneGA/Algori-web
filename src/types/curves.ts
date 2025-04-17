@@ -42,14 +42,15 @@ export interface ClelieParams {
   points: number;
 }
 
-export interface Clelie3DParams {
+export interface Clelie3DParams extends Record<string, number> {
   a: number;    // Rayon
-  m: number;    // Nombre de boucles
+  b: number;    // Hauteur
+  n: number;    // Nombre de boucles
   longueur: number;
   points: number;
 }
 
-export interface ExponentialParams {
+export interface ExponentialParams extends Record<string, any> {
   a: number[];    // Longueurs des barres
   b: number[];    // Vitesses de rotation
   theta_max: number; // Angle maximum
@@ -57,22 +58,27 @@ export interface ExponentialParams {
   n: number;        // Nombre de termes
 }
 
-export interface HypertrochoideParams {
+export interface HypertrochoideParams extends Record<string, number> {
   R: number;
   r: number;
   d: number;
-  longueur: number;
+  tours: number;
   points: number;
 }
 
-export interface MaurerRoseParams {
+export interface MaurerRoseParams extends Record<string, number> {
   n: number;      // Nombre de segments
   d: number;      // Angle en degrés
   k: number;      // Paramètre de forme
   points: number; // Nombre de points pour le tracé
 }
 
-export interface HypocycloideParams {
+export interface MaurerRoseBisParams extends Record<string, number> {
+  n: number;      // Nombre de pétales
+  d: number;      // Multiplicateur d'angle en degrés
+}
+
+export interface HypocycloideParams extends Record<string, number> {
   R: number;      // Rayon du grand cercle
   r: number;      // Rayon du petit cercle
   tours: number;  // Nombre de tours
@@ -86,4 +92,5 @@ export type CurveType =
   | "exponential" 
   | "hypertrochoide"
   | "maurerrose"
-  | "hypocycloide";  // Ajout du nouveau type
+  | "maurerrosebis"
+  | "hypocycloide";
